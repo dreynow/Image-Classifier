@@ -1,33 +1,39 @@
-# Use lightweight Python base image
-FROM python:3.10-slim
+# =====================
+# Stage 1: Builder
+# =====================
+FROM python:3.10-slim AS builder
 
-# Prevent Python from writing .pyc files
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+WORKDIR /build
 
-# Set working directory inside container
-WORKDIR /app
-
-# Install system dependencies (needed for PIL, numpy, TF sometimes)
 RUN apt-get update && apt-get install -y \
     build-essential \
-    libglib2.0-0 \
-    libsm6 \
-    libxrender1 \
-    libxext6 \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy dependency list first (better Docker caching)
 COPY requirements.txt .
+RUN pip install --upgrade pip
+RUN pip wheel --no-cache-dir --no-deps -r requirements.txt -w /wheels
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# =====================
+# Stage 2: Runtime
+# =====================
+FROM python:3.10-slim
 
-# Copy source code
-COPY src/ ./src
+WORKDIR /app
 
-# Copy trained model
-COPY saved_models/ ./saved_models
+# Copy only built wheels
+COPY --from=builder /wheels /wheels
 
-# Default command
-CMD ["python", "src/predict.py"]
+RUN pip install --upgrade pip
+
+RUN for whl in /wheels/*; do \
+        pip install --no-cache-dir "$whl"; \
+    done \
+    && rm -rf /wheels
+
+# Copy only what you need
+COPY src ./src
+COPY saved_models ./saved_models
+
+EXPOSE 8000
+
+CMD ["uvicorn", "src.app:app", "--host", "0.0.0.0", "--port", "8000"]
