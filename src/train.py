@@ -40,4 +40,6 @@ history = model.fit(
     epochs=EPOCHS
 )
 
-model.save("./saved_models/happy_sad_classifier.h5")
+model.save("saved_models/happy_sad_classifier.keras")
+
+

@@ -3,7 +3,7 @@ from tensorflow.keras.models import load_model
 import numpy as np
 from PIL import Image
 
-MODEL_PATH = "saved_models/happy_sad_classifier.h5"
+MODEL_PATH = "saved_models/happy_sad_classifier_tf"
 
 def predict(image_path):
     model = load_model(MODEL_PATH)

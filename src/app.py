@@ -4,9 +4,12 @@ import tensorflow as tf
 from tensorflow.keras.models import load_model
 import numpy as np
 from PIL import Image
+from pathlib import Path
 import io
 
-MODEL_PATH = "saved_models/happy_sad_classifier.h5"
+# //BASE_DIR = Path(__file__).resolve().parent
+
+MODEL_PATH =  "saved_models/happy_sad_classifier.keras"
 
 app = FastAPI(title="Image Classification API")
 
