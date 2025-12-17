@@ -4,6 +4,13 @@ from tensorflow.keras import layers, models
 from preprocessing import train_dataset, validation_dataset
 
 
+
+MODEL_NAME = "happy_sad"
+MODEL_VERSION = "v1"
+MODEL_DIR = f"saved_models/{MODEL_NAME}/{MODEL_VERSION}"
+MODEL_PATH = f"{MODEL_DIR}/model.keras"
+
+
 num_classes = 2  # happy, sad
 
 model = models.Sequential([
@@ -40,6 +47,7 @@ history = model.fit(
     epochs=EPOCHS
 )
 
-model.save("saved_models/happy_sad_classifier.keras")
+model.save(MODEL_PATH)
+# model.save("saved_models/happy_sad_classifier.keras")
 
 

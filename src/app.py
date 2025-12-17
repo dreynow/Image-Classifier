@@ -9,7 +9,8 @@ import io
 
 # //BASE_DIR = Path(__file__).resolve().parent
 
-MODEL_PATH =  "saved_models/happy_sad_classifier.keras"
+MODEL_PATH =  "saved_models/happy_sad/v1/model.keras"
+
 
 app = FastAPI(title="Image Classification API")
 
