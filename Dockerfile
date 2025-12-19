@@ -37,7 +37,13 @@ COPY src ./src
 
 COPY saved_models ./saved_models
 
-RUN test -f saved_models/happy_sad_classifier.keras
+RUN test -f saved_models/happy_sad/v1/model.keras
+
+
+RUN addgroup --system appgroup && \
+    adduser --system --ingroup appgroup appuser
+
+USER appuser
 
 
 EXPOSE 8000
